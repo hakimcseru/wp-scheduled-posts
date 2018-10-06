@@ -1,20 +1,4 @@
 <?php
-/*******************************************************************************
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- ******************************************************************************/
-
 if ( is_admin() ) {
     global $edcal;
     if ( empty($edcal) )
@@ -52,6 +36,9 @@ class EdCal {
         add_action('wp_ajax_edcal_getpost', array(&$this, 'edcal_getpost'));
         add_action('wp_ajax_edcal_deletepost', array(&$this, 'edcal_deletepost'));
         add_action("init", array(&$this, 'edcal_load_language'));
+        add_action( 'admin_menu', array(&$this, 'add_sub_menu_here') );
+
+
         
         /*
          * This boolean variable will be used to check whether this 
@@ -94,6 +81,7 @@ class EdCal {
             $page = add_submenu_page( pluginsFOLDER, __('Schedule Calendar', 'psm'), __('Schedule Calendar', 'psm'), 'manage_options', 'cal', array(&$this, 'edcal_list_admin'));
             add_action( "admin_print_scripts-$page", array(&$this, 'edcal_scripts'));
 
+
             if ($this->supports_custom_types) {
 
 
@@ -119,10 +107,14 @@ class EdCal {
                         $page = add_submenu_page('edit.php?post_type=' . $post_type, __('Calendar', 'editorial-calendar'), __('Calendar', 'editorial-calendar'), 'edit_posts', 'cal_' . $post_type, array(&$this, 'edcal_list_admin'));
                         add_action( "admin_print_scripts-$page", array(&$this, 'edcal_scripts'));
                     }
-                }    
+                }
+
+
             }
         }
     }
+
+    
     
     /*
      * This is a utility function to open a file add it to our

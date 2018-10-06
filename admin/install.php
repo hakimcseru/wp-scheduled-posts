@@ -2,6 +2,7 @@
 	function psm_install() { 
 		global $wpdb;
 		
+
 		if ( !current_user_can('activate_plugins') ) 
 			return;
 			

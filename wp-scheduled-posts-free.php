@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: wp scheduled posts - wp scheduled post pro
+Plugin Name: wp scheduled posts - wp scheduled post free
 Plugin URI: http://www.8pears.com
 Description: This Plugin shows your scheduled posts in calendar, manages your automatic posts publish time, catches missing posts and updates them .
 Author: Nazrul Islam Nayan
@@ -56,11 +56,14 @@ if (!class_exists('post_scheduler_monster')) {
 
 		
 		function activate() {
+			
 			include_once (dirname (__FILE__) . '/admin/install.php');
 			psm_install();
 		}
 
-		function deactivate(){}
+		function deactivate(){
+
+		}
 		function uninstall(){}
 		
 		function start_plugin() {
@@ -77,9 +80,9 @@ if (!class_exists('post_scheduler_monster')) {
 	global $psm;
 	$psm = new post_scheduler_monster();
 		
-}
-
 include('admin/editorial-calendar/edcal.php');
 include('admin/publish-to-schedule/publish-to-schedule.php');
 include('admin/wp-missed-schedule-master/wp-missed-schedule.php');
+}
+
 ?>

@@ -71,3 +71,11 @@
     left: 15px;
 }
 
+.free_pro_wrp{
+	width: 100%;
+    height: 560px;
+    background: url(../images/free_pro.png) no-repeat;
+    background-size: cover;
+    opacity: .3;
+}
+
