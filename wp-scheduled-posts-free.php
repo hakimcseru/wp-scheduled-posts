@@ -1,21 +1,19 @@
 <?php
 /*
-Plugin Name: wp scheduled posts - wp scheduled post free
-Plugin URI: http://www.8pears.com
-Description: This Plugin shows your scheduled posts in calendar, manages your automatic posts publish time, catches missing posts and updates them .
-Author: Nazrul Islam Nayan
-Author URI: http://www.nazrulislamnayan.com
-Version: 1.0
-
-
-Copyright 2018 by 8pears solution limited
+Plugin Name: wp scheduled post pro
+Plugin URI: https://wpdeveloper.net/free-plugin/wp-scheduled-posts/
+Description: This Plugin shows your scheduled posts in calendar, manages your automatic or custom posts publish time, catches missing posts and updates them .
+Author: WP Developer
+Author URI: https://wpdeveloper.net
+Version: 2.0
+Text Domain: wp-scheduled-posts
+License: GPL2+
 
 */ 
 
-
-if (!class_exists('post_scheduler_monster')) {
-	class post_scheduler_monster {
-		function post_scheduler_monster() {
+if (!class_exists('wpsp_addon')) {
+	class wpsp_addon {
+		function __construct() {
 			$this->define_constant();
 			$this->load_dependencies();
 			$this->plugin_name = plugin_basename(__FILE__);
@@ -23,8 +21,10 @@ if (!class_exists('post_scheduler_monster')) {
 
 			
 			register_deactivation_hook( $this->plugin_name, array(&$this, 'deactivate') );
-			register_uninstall_hook( $this->plugin_name, array(&$this, 'uninstall') );
-			add_action( 'plugins_loaded', array(&$this, 'start_plugin') );
+
+			register_uninstall_hook( $this->plugin_name, 'uninstall' );
+
+			add_action( 'admin_enqueue_scripts', array(&$this, 'start_plugin') );
 			add_action( 'admin_init', array(&$this,'check_some_other_plugin' ) );
 		}
 		
@@ -47,10 +47,6 @@ if (!class_exists('post_scheduler_monster')) {
 				register_activation_hook( plugin_basename(__FILE__), 'activate' );
 				remove_submenu_page( 'options-general.php', 'wp-scheduled-posts' );
 
-			}else{
-				//echo "plugin nai";
-				//exit;
-
 			}
 		}
 
@@ -62,9 +58,11 @@ if (!class_exists('post_scheduler_monster')) {
 		}
 
 		function deactivate(){
-
+			return true;
 		}
-		function uninstall(){}
+		function uninstall(){
+			return true;
+		}
 		
 		function start_plugin() {
 			if ( is_admin() ) {
@@ -77,11 +75,12 @@ if (!class_exists('post_scheduler_monster')) {
 		
 		
 	}
-	global $psm;
-	$psm = new post_scheduler_monster();
+	global $wpsp_op;
+	$wpsp_op = new wpsp_addon();
 		
-include('admin/editorial-calendar/edcal.php');
-include('admin/wp-missed-schedule-master/wp-missed-schedule.php');
+include('admin/scheduled-calendar/scheduled.php');
+include('admin/manage-schedule/manage-schedule.php');
+include('admin/wpsp-missed-schedule/wpsp-missed-schedule.php');
 }
 
 ?>

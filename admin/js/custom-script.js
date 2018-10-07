@@ -1,6 +1,4 @@
-
 jQuery(document).ready(function($) {
-
 	$("#pts_form input:checkbox,#man_form input:checkbox").click(function(){
 		var this_name = $(this).attr("name");
 		//alert(this_name);

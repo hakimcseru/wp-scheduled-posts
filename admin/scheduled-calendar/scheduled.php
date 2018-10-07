@@ -2,7 +2,7 @@
 if ( is_admin() ) {
     global $edcal;
     if ( empty($edcal) )
-        $edcal = new EdCal();
+        $edcal = new wpsp_scheduled();
 }
 
 
@@ -21,21 +21,21 @@ define( 'EDCAL_PERMISSION_ERROR', 5 );
  */
 define( 'EDCAL_NONCE_ERROR', 6 );
 
-class EdCal {
+class wpsp_scheduled {
     
     protected $supports_custom_types;
     protected $default_time;
 
     function __construct() {
-        add_action('wp_ajax_edcal_saveoptions', array(&$this, 'edcal_saveoptions'));
-        add_action('wp_ajax_edcal_changedate', array(&$this, 'edcal_changedate'));
-        add_action('wp_ajax_edcal_savepost', array(&$this, 'edcal_savepost'));
-        add_action('wp_ajax_edcal_changetitle', array(&$this, 'edcal_changetitle'));
-        add_action('admin_menu', array(&$this, 'edcal_list_add_management_page'));
-        add_action('wp_ajax_edcal_posts', array(&$this, 'edcal_posts'));
-        add_action('wp_ajax_edcal_getpost', array(&$this, 'edcal_getpost'));
-        add_action('wp_ajax_edcal_deletepost', array(&$this, 'edcal_deletepost'));
-        add_action("init", array(&$this, 'edcal_load_language'));
+        add_action('wp_ajax_edcal_saveoptions', array(&$this, 'wpsp_scheduled_saveoptions'));
+        add_action('wp_ajax_edcal_changedate', array(&$this, 'wpsp_scheduled_changedate'));
+        add_action('wp_ajax_edcal_savepost', array(&$this, 'wpsp_scheduled_savepost'));
+        add_action('wp_ajax_edcal_changetitle', array(&$this, 'wpsp_scheduled_changetitle'));
+        add_action('admin_menu', array(&$this, 'wpsp_scheduled_list_add_management_page'));
+        add_action('wp_ajax_edcal_posts', array(&$this, 'wpsp_scheduled_posts'));
+        add_action('wp_ajax_edcal_getpost', array(&$this, 'wpsp_scheduled_getpost'));
+        add_action('wp_ajax_edcal_deletepost', array(&$this, 'wpsp_scheduled_deletepost'));
+        //add_action("init", array(&$this, 'wpsp_scheduled_load_language'));
         //add_action( 'admin_menu', array(&$this, 'add_sub_menu_here') );
 
 
@@ -65,15 +65,15 @@ class EdCal {
         //$edcal_endDate;
     }
     
-    function edcal_load_language() {
-        $plugin_dir = basename(dirname(__FILE__));
-        load_plugin_textdomain( 'editorial-calendar', 'wp-content/plugins/' . $plugin_dir . '/languages/', $plugin_dir . '/languages/' );
-    }
+    // function wpsp_scheduled_load_language() {
+    //     $plugin_dir = basename(dirname(__FILE__));
+    //     load_plugin_textdomain( 'editorial-calendar', 'wp-content/plugins/' . $plugin_dir . '/languages/', $plugin_dir . '/languages/' );
+    // }
     
     /*
      * This function adds our calendar page to the admin UI
      */
-    function edcal_list_add_management_page() {
+    function wpsp_scheduled_list_add_management_page() {
         if (function_exists('add_management_page') ) {
             // $page = add_posts_page( __('Calendar', 'editorial-calendar'), __('Calendar', 'editorial-calendar'), 'edit_posts', 'cal', array(&$this, 'edcal_list_admin'));
             // add_action( "admin_print_scripts-$page", array(&$this, 'edcal_scripts'));
@@ -420,7 +420,7 @@ class EdCal {
         switch ($_GET['page']){
             
             case "f_vs_p" :
-                include_once ( ABSPATH . 'wp-content/plugins/wp-scheduled-posts-free/admin/f_vs_p.php' );
+                include_once ( ABSPATH . 'wp-content/plugins/wp-scheduled-posts-pro/admin/f_vs_p.php' );
                 break;
             
         }
@@ -563,7 +563,7 @@ class EdCal {
      * This is an AJAX call that gets the posts between the from date 
      * and the to date.  
      */
-    function edcal_posts() {
+    function wpsp_scheduled_posts() {
         header("Content-Type: application/json");
         $this->edcal_addNoCacheHeaders();
         if (!$this->edcal_checknonce()) {
@@ -665,7 +665,7 @@ class EdCal {
     /*
      * This is for an AJAX call that returns a post with the specified ID
      */
-    function edcal_getpost() {
+    function wpsp_scheduled_getpost() {
         
         header("Content-Type: application/json");
         $this->edcal_addNoCacheHeaders();
@@ -861,7 +861,7 @@ class EdCal {
      * retain their position within the calendar without a page refresh.
      * It is not called unless the user has permission to delete the post.
      */
-    function edcal_deletepost() {
+    function wpsp_scheduled_deletepost() {
         if (!$this->edcal_checknonce()) {
             die();
         }
@@ -914,7 +914,7 @@ class EdCal {
      * gets called from the save button in the tooltip when you change a
      * post title in a calendar.
      */
-    function edcal_changetitle() {
+    function wpsp_scheduled_changetitle() {
         if (!$this->edcal_checknonce()) {
             die();
         }
@@ -1009,7 +1009,7 @@ class EdCal {
      * This is a helper function to create a new draft post on a specified date
      * or update an existing post.
      */
-    function edcal_savepost() {
+    function wpsp_scheduled_savepost() {
         
         if (!$this->edcal_checknonce()) {
             die();
@@ -1149,7 +1149,7 @@ class EdCal {
      *
      * If the call is successful then it returns the updated post data.
      */
-    function edcal_changedate() {
+    function wpsp_scheduled_changedate() {
         if (!$this->edcal_checknonce()) {
             die();
         }
@@ -1322,7 +1322,7 @@ class EdCal {
     /*
      * This function saves the preferences
      */
-    function edcal_saveoptions() {
+    function wpsp_scheduled_saveoptions() {
         if (!$this->edcal_checknonce()) {
             die();
         }
