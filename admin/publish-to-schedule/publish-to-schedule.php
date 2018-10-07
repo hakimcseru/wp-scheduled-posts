@@ -1,8 +1,6 @@
 
 <?php
 
-
-
 load_textdomain('psm', dirname(__FILE__).'/lang/' . get_locale() . '.mo');
 
 
@@ -1247,10 +1245,47 @@ function pts_options_page(){
 						$my_prefix = 'psm_';
 						$my_table = $my_prefix. 'manage_schedule';
 
+						
+						/*==========================================
+						 		All delete query for every days
+						==========================================*/
+
+						$sat_id 		= $_GET['sat_id'];
+						$sql 			= "DELETE FROM ".$my_table." WHERE id='$sat_id' ";
+						$delete_sat 	= $wpdb->get_results($sql, ARRAY_A);
+
+						$sun_id 		= $_GET['sun_id'];
+						$sql 			= "DELETE FROM ".$my_table." WHERE id='$sun_id' ";
+						$delete_sun 	= $wpdb->get_results($sql, ARRAY_A);
+
+						$mon_id 		= $_GET['mon_id'];
+						$sql 			= "DELETE FROM ".$my_table." WHERE id='$mon_id' ";
+						$delete_mon 	= $wpdb->get_results($sql, ARRAY_A);
+
+						$tue_id 		= $_GET['tue_id'];
+						$sql 			= "DELETE FROM ".$my_table." WHERE id='$tue_id' ";
+						$delete_tue 	= $wpdb->get_results($sql, ARRAY_A);
+
+						$wed_id 		= $_GET['wed_id'];
+						$sql 			= "DELETE FROM ".$my_table." WHERE id='$wed_id' ";
+						$delete_wed 	= $wpdb->get_results($sql, ARRAY_A);
+
+						$thu_id 		= $_GET['thu_id'];
+						$sql 			= "DELETE FROM ".$my_table." WHERE id='$thu_id' ";
+						$delete_thu 	= $wpdb->get_results($sql, ARRAY_A);
+
+						$fri_id 		= $_GET['fri_id'];
+						$sql 			= "DELETE FROM ".$my_table." WHERE id='$fri_id' ";
+						$delete_fri 	= $wpdb->get_results($sql, ARRAY_A);
+
+
+
+						/*==========================================
+						 		All select query for every days
+						==========================================*/
 
 						$sql 			= "SELECT * FROM ".$my_table." WHERE day='saturday'";
 						$sat_schedules 	= $wpdb->get_results($sql, ARRAY_A);
-						
 
 						$sql 			= "SELECT * FROM ".$my_table." WHERE day='sunday'";
 						$sun_schedules 	= $wpdb->get_results($sql, ARRAY_A);
@@ -1277,9 +1312,10 @@ function pts_options_page(){
 							<?php  
 								// loop of saturday data
 								$count = count($sat_schedules);
-								for($i=0;$i<=$count;$i++){
+								for($i=0;$i<$count;$i++){
+									$id  = $sat_schedules[$i]['id'];
 									$sat = $sat_schedules[$i]['schedule']."<br>";
-									echo '<span>'.$sat.'</span>';
+									echo '<span>'.$sat.'<a href="?page=manage-schedule&&sat_id='.$id.'">x</a></span>';
 								}
 							?>
 							
@@ -1289,10 +1325,11 @@ function pts_options_page(){
 							<?php  
 								// loop of sunday data
 								$count = count($sun_schedules);
-								for($i=0;$i<=$count;$i++){
+								for($i=0;$i<$count;$i++){
+									$id  = $sun_schedules[$i]['id'];
 									$sun = $sun_schedules[$i]['schedule']."<br>";
 									if( !empty($sun) ){
-										echo '<span>'.$sun.'</span>';
+										echo '<span>'.$sun.'<a href="?page=manage-schedule&&sun_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1304,10 +1341,11 @@ function pts_options_page(){
 							<?php  
 								// loop of monday data
 								$count = count($mon_schedules);
-								for($i=0;$i<=$count;$i++){
+								for($i=0;$i<$count;$i++){
+									$id  = $mon_schedules[$i]['id'];
 									$mon = $mon_schedules[$i]['schedule']."<br>";
 									if( isset($mon) && !empty($mon) ){
-										echo '<span>'.$mon.'</span>';
+										echo '<span>'.$mon.'<a href="?page=manage-schedule&&mon_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1319,10 +1357,11 @@ function pts_options_page(){
 							<?php  
 								// loop of tuesday data
 								$count = count($tue_schedules);
-								for($i=0;$i<=$count;$i++){
+								for($i=0;$i<$count;$i++){
+									$id  = $tue_schedules[$i]['id'];
 									$tue = $tue_schedules[$i]['schedule']."<br>";
 									if( isset($tue) && !empty($tue) ){
-										echo '<span>'.$tue.'</span>';
+										echo '<span>'.$tue.'<a href="?page=manage-schedule&&tue_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1334,10 +1373,11 @@ function pts_options_page(){
 							<?php  
 								// loop of wednesday data
 								$count = count($wed_schedules);
-								for($i=0;$i<=$count;$i++){
+								for($i=0;$i<$count;$i++){
+									$id  = $wed_schedules[$i]['id'];
 									$wed = $wed_schedules[$i]['schedule']."<br>";
 									if( isset($wed) && !empty($wed) ){
-										echo '<span>'.$wed.'</span>';
+										echo '<span>'.$wed.'<a href="?page=manage-schedule&&wed_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1349,10 +1389,11 @@ function pts_options_page(){
 							<?php  
 								// loop of thursday data
 								$count = count($thu_schedules);
-								for($i=0;$i<=$count;$i++){
+								for($i=0;$i<$count;$i++){
+									$id  = $thu_schedules[$i]['id'];
 									$thu = $thu_schedules[$i]['schedule']."<br>";
 									if( isset($thu) && !empty($thu) ){
-										echo '<span>'.$thu.'</span>';
+										echo '<span>'.$thu.'<a href="?page=manage-schedule&&thu_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1364,10 +1405,11 @@ function pts_options_page(){
 							<?php  
 								// loop of friday data
 								$count = count($fri_schedules);
-								for($i=0;$i<=$count;$i++){
+								for($i=0;$i<$count;$i++){
+									$id  = $fri_schedules[$i]['id'];
 									$fri = $fri_schedules[$i]['schedule']."<br>";
 									if( isset($fri) && !empty($fri) ){
-										echo '<span>'.$fri.'</span>';
+										echo '<span>'.$fri.'<a href="?page=manage-schedule&&fri_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}

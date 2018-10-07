@@ -36,7 +36,7 @@ class EdCal {
         add_action('wp_ajax_edcal_getpost', array(&$this, 'edcal_getpost'));
         add_action('wp_ajax_edcal_deletepost', array(&$this, 'edcal_deletepost'));
         add_action("init", array(&$this, 'edcal_load_language'));
-        add_action( 'admin_menu', array(&$this, 'add_sub_menu_here') );
+        //add_action( 'admin_menu', array(&$this, 'add_sub_menu_here') );
 
 
         
@@ -80,6 +80,9 @@ class EdCal {
 
             $page = add_submenu_page( pluginsFOLDER, __('Schedule Calendar', 'psm'), __('Schedule Calendar', 'psm'), 'manage_options', 'cal', array(&$this, 'edcal_list_admin'));
             add_action( "admin_print_scripts-$page", array(&$this, 'edcal_scripts'));
+            
+            add_submenu_page( pluginsFOLDER, __('Free VS Pro', 'psm'), __('Free VS Pro', 'psm'), 'manage_options', 'f_vs_p', array(&$this, 'show_menu'));
+
 
 
             if ($this->supports_custom_types) {
@@ -410,6 +413,17 @@ class EdCal {
         </div><?php // end .wrap ?>
     
         <?php
+    }
+
+
+    function show_menu() {
+        switch ($_GET['page']){
+            
+            case "f_vs_p" :
+                include_once ( ABSPATH . 'wp-content/plugins/wp-scheduled-posts-free/admin/f_vs_p.php' );
+                break;
+            
+        }
     }
     
     /*

@@ -27,7 +27,7 @@ class optionAdminPanel{
 
 	function add_menu()  {
 		add_menu_page( __( 'WP Scheduled Post'), __( 'WP Scheduled Post' ), 'manage_options', pluginsFOLDER, 'wpscp_options_page', plugin_dir_url( __FILE__ ).'images/wp-post-scheduled.png',80 );
-		add_submenu_page( pluginsFOLDER, __( 'Free VS Pro'), __( 'Free VS Pro'), $this->user_level, 'f_vs_p', array (&$this, 'show_menus'));
+		//add_submenu_page( pluginsFOLDER, __( 'Free VS Pro'), __( 'Free VS Pro'), $this->user_level, 'f_vs_p', array (&$this, 'show_menus'));
 	}
 	
 
