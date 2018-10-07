@@ -1,8 +1,6 @@
-
 <?php
 
-load_textdomain('psm', dirname(__FILE__).'/lang/' . get_locale() . '.mo');
-
+//load_textdomain('psm', dirname(__FILE__).'/lang/' . get_locale() . '.mo');
 
 $plName = 'Publish to Schedule';
 $plUrl = 'https://wordpress.org/extend/plugins/publish-to-schedule/';
@@ -18,9 +16,6 @@ $activate_cal_option 	= html_entity_decode(stripslashes($get_cal_op));
 $pts_debug = False;
 
 
-#Actions that change post status...
-#https://codex.wordpress.org/Post_Status_Transitions
-
 #All possible post status in Jan 2012...
 
 #'new' - When there's no previous status
@@ -33,9 +28,6 @@ $pts_debug = False;
 #'inherit' - a revision. see get_children.
 #'trash' - post is in trashbin. added with Version 2.9.
 
-# set the interesting status when plugin will do its magic...
-
-
 
 $possibleStatus = array();
 array_push($possibleStatus,'new');
@@ -45,14 +37,14 @@ array_push($possibleStatus,'auto-draft');
 
 # create actions for each one ...
 foreach($possibleStatus as $status) {
-	add_action($status.'_to_publish','pts_do_publish_schedule',1);	
+	add_action($status.'_to_publish','wpsp_scheduled_do_publish_schedule',1);	
 }
 
 
 
 # change the name os publish button...
 
-function pts_change_publish_button($translation, $text) {
+function wpsp_scheduled_change_publish_button($translation, $text) {
 
 	global $activate_pub_option;
 	global $activate_cal_option;
@@ -60,12 +52,12 @@ function pts_change_publish_button($translation, $text) {
 
 	if(isset($activate_pub_option) && !empty($activate_pub_option)){
 	    if ($text == 'Publish') {
-	        return __('Publish Schedule', 'psm');
+	        return __('Publish Schedule', 'wp-scheduled-posts');
 	    }
     	return $translation;
 	}elseif(isset($activate_cal_option) && !empty($activate_cal_option)){
 	    if ($text == 'Publish') {
-	        return __('Publish Schedule', 'psm');
+	        return __('Publish Schedule', 'wp-scheduled-posts');
 	    }
     	return $translation;
 	}else{
@@ -78,7 +70,7 @@ function pts_change_publish_button($translation, $text) {
 
 # return the actual version of this plugin
 
-function pts_get_version() {
+function wpsp_scheduled_get_version() {
     $plugin_data = get_plugin_data(__FILE__);
     $plugin_version = $plugin_data['Version'];
     return $plugin_version;
@@ -89,7 +81,7 @@ function pts_get_version() {
 
 # insert Google Analytics code to monitor plugin utilization.
 
-function pts_insertAnalytics($getCode = False) {
+function wpsp_scheduled_insertAnalytics($getCode = False) {
 
     $options = get_option(basename(__FILE__, ".php"));
 
@@ -125,7 +117,7 @@ function pts_insertAnalytics($getCode = False) {
 
 
 # creates a js function that will compare the cliet time with the server time, passed as variables...
-function pts_createJsToCompareTime($HTMLWrong,$HTMLOK){
+function wpsp_scheduled_createJsToCompareTime($HTMLWrong,$HTMLOK){
 
 
 	$HTMLWrong = trim($HTMLWrong);
@@ -196,7 +188,7 @@ function pts_createJsToCompareTime($HTMLWrong,$HTMLOK){
 
 
 # show information near the publish button...
-function pts_postInfo(){
+function wpsp_scheduled_postInfo(){
 	global $post;	
 	global $pts_donateURL;
 	global $plName;
@@ -230,11 +222,11 @@ function pts_postInfo(){
 	
 	
 	# only change the text of publish button when plugin is active...
-	add_filter( 'gettext', 'pts_change_publish_button', 10, 2 );	
+	add_filter( 'gettext', 'wpsp_scheduled_change_publish_button', 10, 2 );	
 	
 	
 	# insert Google analytics code to monitor plugin usage.
-	add_action('admin_footer', 'pts_insertAnalytics',12);
+	add_action('admin_footer', 'wpsp_scheduled_insertAnalytics',12);
 
 	
 	
@@ -246,22 +238,22 @@ function pts_postInfo(){
 	# show diferent messages for admin and non admin users...
 	if(current_user_can('install_plugins')){
 		$msgTimeWrong = '<div style="margin: 0 0 7px 0"><span style="color:red">'.
-		__('Your WordPress timezone settings might be incorrect!','psm').
+		__('Your WordPress timezone settings might be incorrect!','wp-scheduled-posts').
 		'</span>  ( <a href="options-general.php?page=publish-to-schedule/publish-to-schedule.php" target="_blank">'.
-		__('See details','psm').'</a> )</div>';
+		__('See details','wp-scheduled-posts').'</a> )</div>';
 	}
 	else{
 		$msgTimeWrong = '<div style="margin: 0 0 7px 0"><span style="color:red">'.
-		__('Your WordPress timezone settings might be incorrect!','psm').
+		__('Your WordPress timezone settings might be incorrect!','wp-scheduled-posts').
 		'</span>  ( '.
-		__('Please tell the blog admin!','psm').
+		__('Please tell the blog admin!','wp-scheduled-posts').
 		'</a> )</div>';
 			
 	}
 	
 	
 	
-	echo pts_createJsToCompareTime($msgTimeWrong,'');					
+	echo wpsp_scheduled_createJsToCompareTime($msgTimeWrong,'');					
 	# div usada para reportar hora incorreta...		
 	echo '<div style="padding-left:20px;" id="divjsCT"></div>';
 	
@@ -269,12 +261,12 @@ function pts_postInfo(){
 			jsCompareTimes();
 		</script>';
 	
-	echo pts_findNextSlot($post);		
+	echo wpsp_scheduled_findNextSlot($post);		
 	
 	
 	echo '</div>';
 }
-add_action( 'post_submitbox_misc_actions', 'pts_postInfo' );
+add_action( 'post_submitbox_misc_actions', 'wpsp_scheduled_postInfo' );
 
 
 
@@ -284,7 +276,7 @@ add_action( 'post_submitbox_misc_actions', 'pts_postInfo' );
 
 
 
-function pts_getMaxPostsDay($datetimeCheck){
+function wpsp_scheduled_getMaxPostsDay($datetimeCheck){
 
 	global $options;
 	
@@ -317,7 +309,7 @@ function pts_getMaxPostsDay($datetimeCheck){
 
 
 # return the next date and time for post.
-function pts_findNextSlot($post,$changePost = False){
+function wpsp_scheduled_findNextSlot($post,$changePost = False){
 	global $wpdb;
 	global $table_prefix;
 	global $pts_debug;
@@ -329,9 +321,9 @@ function pts_findNextSlot($post,$changePost = False){
 		if(($post->post_status == 'draft') or ($post->post_status == 'pending')){		
 			if(   strtotime($post->post_date)   >     strtotime(date(current_time('mysql', $gmt = 0)))    ){
 				$msg = '';
-				$msg .= __('Post already scheduled for a future date!',  'psm');
+				$msg .= __('Post already scheduled for a future date!',  'wp-scheduled-posts');
 				$msg .= '<br>';
-				$msg .= __('In this case, the plugin will do nothing!',  'psm');
+				$msg .= __('In this case, the plugin will do nothing!',  'wp-scheduled-posts');
 				if($changePost == False){
 					return $msg;			
 				}
@@ -411,7 +403,7 @@ function pts_findNextSlot($post,$changePost = False){
 			$msg .=  '' . date(get_option('date_format'),$datetimeCheck) . ' - <span style="<BBB>"> '.__(date("l",$datetimeCheck),'pts').'</span><CCC><DDD><EEE><br>';
 			
 
-			$maxPostsThisDay = pts_getMaxPostsDay($datetimeCheck);
+			$maxPostsThisDay = wpsp_scheduled_getMaxPostsDay($datetimeCheck);
 			$nPostsDay = 0;
 
 		
@@ -446,14 +438,14 @@ function pts_findNextSlot($post,$changePost = False){
 					$msgThereIsPost	= '';
 					
 					if(($nPostsDay == 1) & ($maxPostsThisDay == 1)){		
-						$msgThereIsPost .= ' | ' . __('post at ','psm');
+						$msgThereIsPost .= ' | ' . __('post at ','wp-scheduled-posts');
 						$msgThereIsPost .= ' ';				
-						$msgThereIsPost .= '<a title="'.__('Edit post',  'psm').' : '.$rp->post_title.
+						$msgThereIsPost .= '<a title="'.__('Edit post',  'wp-scheduled-posts').' : '.$rp->post_title.
 							'" target="_blank" href="post.php?post='.$rp->ID.'&action=edit">'.
 						date(get_option('time_format'),strtotime($rp->post_date)).'</a>';
 					}
 					else{
-						$msgThereIsPost .= " ($nPostsDay "  . __('of','psm') . ' '. "$maxPostsThisDay)";
+						$msgThereIsPost .= " ($nPostsDay "  . __('of','wp-scheduled-posts') . ' '. "$maxPostsThisDay)";
 					}
 					 
 					$msg = str_replace('<CCC>',$msgThereIsPost,$msg);				
@@ -497,9 +489,9 @@ function pts_findNextSlot($post,$changePost = False){
 			
 			$msgDayAvailble = '';
 			
-			$msgDayAvailble .= " (   $nPostsDay  "  . __('of','psm') . ' '. "$maxPostsThisDay ) ";
+			$msgDayAvailble .= " (   $nPostsDay  "  . __('of','wp-scheduled-posts') . ' '. "$maxPostsThisDay ) ";
 			
-			$msgDayAvailble .= ' | <strong>' . __('Availble day!','psm') . '</strong>';				
+			$msgDayAvailble .= ' | <strong>' . __('Availble day!','wp-scheduled-posts') . '</strong>';				
 			
 			# if the day is today... check to see if there is time to publish within the time window configured...
 			if($dt == date("Ymd",strtotime($startDate))){
@@ -510,7 +502,7 @@ function pts_findNextSlot($post,$changePost = False){
 				$nowTotalMinutes =  date('H',strtotime($nowLocal)) * 60 + date('i',strtotime($nowLocal));;
 				
 				if($nowTotalMinutes > $endMinute){
-					$msgTooLateToday = ' | ' . __('Too late to publish','psm');				
+					$msgTooLateToday = ' | ' . __('Too late to publish','wp-scheduled-posts');				
 					$msg = str_replace('<BBB>',$cssDayTooLate,$msg);
 					$msg = str_replace('<DDD>',$msgTooLateToday,$msg);
 					
@@ -554,14 +546,6 @@ function pts_findNextSlot($post,$changePost = False){
 				#avoid divide by zero on module (%)...
 				$minutePublish += 1;
 			}				
-			
-			
-			/*
-			if($pts_debug and False){			
-				$msg .= 'DEBUG: $datetimeCheck = ' . date("Ymd",$datetimeCheck) . '<br>';
-				$msg .= 'date("Ymd",strtotime($startDate)) = ' .  date("Ymd",strtotime($startDate))  . '<br>';
-			}
-			*/
 			
 			
 			# if next date is today... and it is the first post... publish 3 minute in future!
@@ -670,7 +654,7 @@ function pts_findNextSlot($post,$changePost = False){
 			# parcial message... not complete.
 			$msgT = '';				
 			
-			$msgByPass =  __('To publish in a different date and bypass the plugin, first choose the schedule date from the WordPress controls above and then click the Schedule button!',  'psm');
+			$msgByPass =  __('To publish in a different date and bypass the plugin, first choose the schedule date from the WordPress controls above and then click the Schedule button!',  'wp-scheduled-posts');
 			
 			#$msgByPass = '<span style="font-size:11px;">' .  $msgByPass . '</span>';		
 			#$msgT .= '<br>';	
@@ -683,10 +667,10 @@ function pts_findNextSlot($post,$changePost = False){
 			}
 			
 			$msgT .=  '<p title="'.$msgByPass.'">';
-			$msgT .= __('Will be schedule to','psm') . ': <br>';
+			$msgT .= __('Will be schedule to','wp-scheduled-posts') . ': <br>';
 			$msgT .= '<strong>';
 			
-			 	$msgT .= __(date("l",strtotime($dthrPublish)),'psm') . ', ' . date(get_option('date_format'),strtotime($dthrPublish)) . ' '. __('at','') .' ' . date(get_option('time_format') , strtotime($dthrPublish));
+			 	$msgT .= __(date("l",strtotime($dthrPublish)),'wp-scheduled-posts') . ', ' . date(get_option('date_format'),strtotime($dthrPublish)) . ' '. __('at','') .' ' . date(get_option('time_format') , strtotime($dthrPublish));
 			 
 
 			$msgT .= '</strong>';
@@ -720,10 +704,10 @@ function pts_findNextSlot($post,$changePost = False){
 		
 		if(!$changePost){
 			return 
-				__('Could not find a suitable date to this post!','psm').'<br>'.
-				__('No changes will be made to this post date!','psm').'<br>'.
-				__('Something is wrong!','psm').'<br>'.
-				__('Please contact the plugin developer!','psm');
+				__('Could not find a suitable date to this post!','wp-scheduled-posts').'<br>'.
+				__('No changes will be made to this post date!','wp-scheduled-posts').'<br>'.
+				__('Something is wrong!','wp-scheduled-posts').'<br>'.
+				__('Please contact the plugin developer!','wp-scheduled-posts');
 		}
 		else{
 			return null;		
@@ -736,14 +720,14 @@ function pts_findNextSlot($post,$changePost = False){
 
 
 # this is where the magic happens... :)
-function pts_do_publish_schedule($post){
+function wpsp_scheduled_do_publish_schedule($post){
 	global $wpdb;
 	global $pts_debug;	
 	global $activate_pub_option;
 
 
 	//if(isset($activate_pub_option) && !empty($activate_pub_option)){
-		$newDate = pts_findNextSlot($post,True);
+		$newDate = wpsp_scheduled_findNextSlot($post,True);
 
 		# do nothing if cant find date...
 		if($newDate == null){
@@ -797,7 +781,7 @@ function pts_do_publish_schedule($post){
 
 
 #	Define the options menu
-function pts_option_menu() {
+function wpsp_scheduled_option_menu() {
 	global $plName;	
 	if (function_exists('current_user_can')) {
 		if (!current_user_can('manage_options')) return;
@@ -807,12 +791,12 @@ function pts_option_menu() {
 		if ($user_level < 8) return;
 	}
 	if (function_exists('add_menu_page')) {
-		//add_options_page($plName, $plName, "manage_options", __FILE__, 'pts_options_page');
-		add_submenu_page( pluginsFOLDER,__( 'Manage Schedule'), __( 'Manage Schedule'), "manage_options", 'manage-schedule', 'pts_options_page');
+		//add_options_page($plName, $plName, "manage_options", __FILE__, 'wpsp_scheduled_options_page');
+		add_submenu_page( pluginsFOLDER,__( 'Manage Schedule'), __( 'Manage Schedule'), "manage_options", 'manage-schedule', 'wpsp_scheduled_options_page');
 	}
 }
 # Install the option in the WordPress configuration menu
-add_action('admin_menu', 'pts_option_menu');
+add_action('admin_menu', 'wpsp_scheduled_option_menu');
 
 
 
@@ -828,7 +812,7 @@ $default_options['pts_allowstats'] = 'yes';
 add_option(basename(__FILE__, ".php"), $default_options);
 
 // This method displays, stores and updates all the options
-function pts_options_page(){
+function wpsp_scheduled_options_page(){
 	global $wpdb;
 	global $plName;
 	global $plUrl;
@@ -838,7 +822,7 @@ function pts_options_page(){
 
 
 	# insert Google analytics code to monitor plugin usage.
-	add_action('admin_footer', 'pts_insertAnalytics',12);
+	add_action('admin_footer', 'wpsp_scheduled_insertAnalytics',12);
 	
 	
 	$bit = explode("&",$_SERVER['REQUEST_URI']);
@@ -936,10 +920,10 @@ function pts_options_page(){
 		
 		
 		<h2 style="margin-bottom: 30px;"  title="<?php 
-		_e('Plugin version','psm');
+		_e('Plugin version','wp-scheduled-posts');
 		echo ': ';
-		echo pts_get_version() 
-		?>"><?php echo ucwords(str_replace('-', ' ', basename(__FILE__, ".php"))) .' - '. __('Options', 'psm'); ?></h2>
+		echo wpsp_scheduled_get_version() 
+		?>"><?php echo ucwords(str_replace('-', ' ', basename(__FILE__, ".php"))) .' - '. __('Options', 'wp-scheduled-posts'); ?></h2>
 		
 		
 
@@ -961,16 +945,6 @@ function pts_options_page(){
 				<?php				
 					$days = array('sunday','monday','tuesday','wednesday','thursday','friday','saturday');
 					
-					/*
-					$a = _e('Sunday','pts');
-					$a = _e('Monday','pts');
-					$a = _e('Tuesday','pts');
-					$a = _e('Wednesday','pts');
-					$a = _e('Thursday','pts');
-					$a = _e('Friday','pts');
-					$a = _e('Saturday','pts');
-					*/
-					
 				?>
 				
 				
@@ -984,7 +958,7 @@ function pts_options_page(){
 					?>
 						
 						<tr valign="top">
-							<th scope="row" align="left" style="padding:5px;"><?php _e(ucfirst($day), 'pts') ?>:</th>
+							<th scope="row" align="left" style="padding:5px;"><?php _e(ucfirst($day), 'wp-scheduled-posts') ?>:</th>
 							
 							<td style="padding:5px;">					
 								<input 
@@ -1008,17 +982,17 @@ function pts_options_page(){
 				</table>
 				
 				
-				<h3 style="margin-top:10px;"><?php _e('Specify the time interval in which you want to have your posts scheduled!',  'psm')?></h3>
+				<h3 style="margin-top:10px;"><?php _e('Specify the time interval in which you want to have your posts scheduled!',  'wp-scheduled-posts')?></h3>
 				
 				<table class="optiontable">
 					<tr valign="top">
-						<th scope="row" align="left"><?php _e('Start Time', 'psm') ?>:</th>
-						<td><input name="pts_start" type="text" id="start" value="<?php echo $options['pts_start']; ?>" size="10" /><?php _e(' (defaults to 00:00)', 'psm') ?>
+						<th scope="row" align="left"><?php _e('Start Time', 'wp-scheduled-posts') ?>:</th>
+						<td><input name="pts_start" type="text" id="start" value="<?php echo $options['pts_start']; ?>" size="10" /><?php _e(' (defaults to 00:00)', 'wp-scheduled-posts') ?>
 						</td>
 					</tr>
 					<tr valign="top">
-						<th scope="row" align="left"><?php _e('End Time', 'psm') ?>:</th>
-						<td><input name="pts_end" type="text" id="end" value="<?php echo $options['pts_end']; ?>" size="10" /><?php _e(' (defaults to 23:59)', 'psm') ?>
+						<th scope="row" align="left"><?php _e('End Time', 'wp-scheduled-posts') ?>:</th>
+						<td><input name="pts_end" type="text" id="end" value="<?php echo $options['pts_end']; ?>" size="10" /><?php _e(' (defaults to 23:59)', 'wp-scheduled-posts') ?>
 						</td>
 					</tr>
 				</table>
@@ -1029,7 +1003,7 @@ function pts_options_page(){
 				
 				$msgTimeWrong = '
 
-				<h3 style="margin-top:20px;">'. __('Your WordPress timezone settings might be incorrect!', 'psm').		
+				<h3 style="margin-top:20px;">'. __('Your WordPress timezone settings might be incorrect!', 'wp-scheduled-posts').		
 				'</h3>'
 				 . __('The date and time we detect : ') . '<span style="color:blue;font-weight:bold;">'
 				.date(get_option('date_format').', '.get_option('time_format'),current_time('timestamp', $gmt = 1)).
@@ -1039,38 +1013,38 @@ function pts_options_page(){
 				
 				$msgTimeOK ='
 
-				<h3 style="margin-top:20px;">'. __('Your timezone configuration and server time seems to be OK!','psm').		
+				<h3 style="margin-top:20px;">'. __('Your timezone configuration and server time seems to be OK!','wp-scheduled-posts').		
 				'</h3>'
 				 .' <span style="color:green;font-weight:bold;">'.date(get_option('date_format').', '.get_option('time_format'),current_time('timestamp', $gmt = 0)).'</span>';
 				
 				
 				$msgTimeWrong = '<h3 style="margin-top:20px;">'		
-				. __('Your WordPress timezone settings might be incorrect!', 'psm').								
+				. __('Your WordPress timezone settings might be incorrect!', 'wp-scheduled-posts').								
 				'</h3>'
-				. __('According to your web server','psm') .		
+				. __('According to your web server','wp-scheduled-posts') .		
 				', '
-				. __('the GMT time is: ','psm') . ' <span style="color:blue;font-weight:bold;">'.date(get_option('date_format').', '.get_option('time_format'),current_time('timestamp', $gmt = 1)).'.</span>'.
+				. __('the GMT time is: ','wp-scheduled-posts') . ' <span style="color:blue;font-weight:bold;">'.date(get_option('date_format').', '.get_option('time_format'),current_time('timestamp', $gmt = 1)).'.</span>'.
 				'<br>'
-				. __('The timezone configured in your','psm').' <a target="_blank" href="options-general.php">'.__('WordPress settings','psm').'</a> '.__('is','psm') .': <span style="color:blue;font-weight:bold;">'.get_option('gmt_offset').', </span>'.
+				. __('The timezone configured in your','wp-scheduled-posts').' <a target="_blank" href="options-general.php">'.__('WordPress settings','wp-scheduled-posts').'</a> '.__('is','wp-scheduled-posts') .': <span style="color:blue;font-weight:bold;">'.get_option('gmt_offset').', </span>'.
 				'<br>'			
-				. __('so your server think that is your local time is: ','psm') . ' <span style="color:red;font-weight:bold;">'.date(get_option('date_format').', '.get_option('time_format'),current_time('timestamp', $gmt = 0)).'</span> ... '
-				. __('but this is different from time on you machine now!','psm').
+				. __('so your server think that is your local time is: ','wp-scheduled-posts') . ' <span style="color:red;font-weight:bold;">'.date(get_option('date_format').', '.get_option('time_format'),current_time('timestamp', $gmt = 0)).'</span> ... '
+				. __('but this is different from time on you machine now!','wp-scheduled-posts').
 				'<br>'
-				. __('If the difference is not too big (less than 2h or 3h) you problably will not have side effects and the plugin should work fine!','psm').
+				. __('If the difference is not too big (less than 2h or 3h) you problably will not have side effects and the plugin should work fine!','wp-scheduled-posts').
 				'<br>'
-				. __('Othewise, with big time differences, you can have issues with the real time that each post will be scheduled!','psm').
+				. __('Othewise, with big time differences, you can have issues with the real time that each post will be scheduled!','wp-scheduled-posts').
 				'<br>'
-				. __('Sometimes you have to set a different timezone to compensate daylight saving time or a missconfigured server time! ','psm').
+				. __('Sometimes you have to set a different timezone to compensate daylight saving time or a missconfigured server time! ','wp-scheduled-posts').
 				
 				'<br>'
-				. __('If you can, change the timezone to correct this, refresh this page and this message will be shown anymore!','psm')		
+				. __('If you can, change the timezone to correct this, refresh this page and this message will be shown anymore!','wp-scheduled-posts')		
 				;		
 				
 				
 				
 				
 				# javascript to compare the times...
-				echo pts_createJsToCompareTime($msgTimeWrong,$msgTimeOK);			
+				echo wpsp_scheduled_createJsToCompareTime($msgTimeWrong,$msgTimeOK);			
 				
 				# div usada para reportar hora incorreta...		
 				echo '<div id="divjsCT"></div>';
@@ -1092,67 +1066,7 @@ function pts_options_page(){
 					$post_date = the_date('Y-m-d H:i:s', '', '', FALSE); 
 					//array_push($future_post_date,$post_date);
 				endwhile;
-				// // next time schedule fix
-
-				// global $wpdb;
-				// $my_prefix = 'psm_';
-				// $my_table = $my_prefix. 'manage_schedule';
-
-				// $future_post_date=array();
-				// $my_query = new WP_Query( array( 'post_type'=>'post', 'posts_per_page' => -1, 'order' => 'ASC','post_status' => array( 'future' ), ) );
-
-				// while ($my_query->have_posts()) : $my_query->the_post();
-				// 	$post_date = strtotime(the_date('Y-m-d H:i:s', '', '', FALSE));
-				// 	array_push($future_post_date,$post_date);
-				// endwhile;
-
-
 				
-
-				
-				// $sql 			= "SELECT * FROM ".$my_table;
-				// $day_schedules 	= $wpdb->get_results($sql, ARRAY_A);
-
-				// $all_day_schedule = array();
-				// $today_bar=date("l"); // use timezone  return:Sunday
-				// $todat_timestamp=strtotime(date("Y-m-d H:i")); // use timezone  return:2018-11-11 23:10
-				// foreach($day_schedules as $day_schedule){
-					
-				// 	if(strtolower($today_bar)==strtolower($day_schedule['day']))
-				// 	{	
-				// 		 $nvar_2=strtotime(date("Y-m-d")." ".$day_schedule['schedule']);
-				// 		 if($nvar_2>$todat_timestamp)
-				// 		 array_push($all_day_schedule,$nvar_2);	
-				// 	} 
-				// 	else{
-				// 	$new_var = strtotime("Next ".$day_schedule['day']." ".$day_schedule['schedule']);
-				// 	array_push($all_day_schedule,$new_var);
-				// 	}
-				// }
-
-				// function nextWeek($presentWk){
-				// 	$pr_wk = count($presentWk);
-				// 	for($d=0;$d<$pr_wk;$d++){
-				// 		$presentWk[$d] = strtotime(date('Y-m-d H:i',$presentWk[$d]).' +7 day');
-
-				// 	}
-				// 	return $presentWk;
-				// }
-				
-				// $nxtWk = nextWeek($all_day_schedule);
-				// $loop_c = count($nxtWk);
-
-				// sort($nxtWk);
-
-				// for($p=0;$p<$loop_c;$p++){
-				// 	echo date("Y-m-d H:i",$nxtWk[$p])."<br>";
-				// } 
-
-				// echo "<pre>";
-				// print_r( $nxtWk );
-				// echo "</pre>";
-				
-
 			 ?>
 
 			<?php
@@ -1250,31 +1164,45 @@ function pts_options_page(){
 						 		All delete query for every days
 						==========================================*/
 
-						$sat_id 		= $_GET['sat_id'];
+						if(isset($_GET['sat_id'])){ 
+							$sat_id 		= $_GET['sat_id']; 
+						}
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$sat_id' ";
 						$delete_sat 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$sun_id 		= $_GET['sun_id'];
+						if(isset($_GET['sun_id'])){
+							$sun_id 		= $_GET['sun_id'];
+						}
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$sun_id' ";
 						$delete_sun 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$mon_id 		= $_GET['mon_id'];
+						if(isset($_GET['mon_id'])){
+							$mon_id 		= $_GET['mon_id'];
+						}
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$mon_id' ";
 						$delete_mon 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$tue_id 		= $_GET['tue_id'];
+						if(isset($_GET['tue_id'])){
+							$tue_id 		= $_GET['tue_id'];
+						}
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$tue_id' ";
 						$delete_tue 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$wed_id 		= $_GET['wed_id'];
+						if(isset($_GET['wed_id'])){
+							$wed_id 		= $_GET['wed_id'];
+						}
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$wed_id' ";
 						$delete_wed 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$thu_id 		= $_GET['thu_id'];
+						if(isset($_GET['thu_id'])){
+							$thu_id 		= $_GET['thu_id'];
+						}
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$thu_id' ";
 						$delete_thu 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$fri_id 		= $_GET['fri_id'];
+						if(isset($_GET['fri_id'])){
+							$fri_id 		= $_GET['fri_id'];
+						}
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$fri_id' ";
 						$delete_fri 	= $wpdb->get_results($sql, ARRAY_A);
 
@@ -1304,7 +1232,7 @@ function pts_options_page(){
 
 						$sql 			= "SELECT * FROM ".$my_table." WHERE day='friday'";
 						$fri_schedules 	= $wpdb->get_results($sql, ARRAY_A);
-					 ?>
+					?>
 
 					<ul class="schedule-list" style="margin-top: 20px;">
 						<li>
@@ -1315,7 +1243,7 @@ function pts_options_page(){
 								for($i=0;$i<$count;$i++){
 									$id  = $sat_schedules[$i]['id'];
 									$sat = $sat_schedules[$i]['schedule'];
-									echo '<span>'.$sat.'<a href="?page=manage-schedule&&sat_id='.$id.'">x</a></span>';
+									echo '<span>'.$sat.' <a href="?page=manage-schedule&&sat_id='.$id.'">x</a></span>';
 								}
 							?>
 							
@@ -1329,7 +1257,7 @@ function pts_options_page(){
 									$id  = $sun_schedules[$i]['id'];
 									$sun = $sun_schedules[$i]['schedule'];
 									if( !empty($sun) ){
-										echo '<span>'.$sun.'<a href="?page=manage-schedule&&sun_id='.$id.'">x</a></span>';
+										echo '<span>'.$sun.' <a href="?page=manage-schedule&&sun_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1345,7 +1273,7 @@ function pts_options_page(){
 									$id  = $mon_schedules[$i]['id'];
 									$mon = $mon_schedules[$i]['schedule'];
 									if( isset($mon) && !empty($mon) ){
-										echo '<span>'.$mon.'<a href="?page=manage-schedule&&mon_id='.$id.'">x</a></span>';
+										echo '<span>'.$mon.' <a href="?page=manage-schedule&&mon_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1361,7 +1289,7 @@ function pts_options_page(){
 									$id  = $tue_schedules[$i]['id'];
 									$tue = $tue_schedules[$i]['schedule'];
 									if( isset($tue) && !empty($tue) ){
-										echo '<span>'.$tue.'<a href="?page=manage-schedule&&tue_id='.$id.'">x</a></span>';
+										echo '<span>'.$tue.' <a href="?page=manage-schedule&&tue_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1377,7 +1305,7 @@ function pts_options_page(){
 									$id  = $wed_schedules[$i]['id'];
 									$wed = $wed_schedules[$i]['schedule'];
 									if( isset($wed) && !empty($wed) ){
-										echo '<span>'.$wed.'<a href="?page=manage-schedule&&wed_id='.$id.'">x</a></span>';
+										echo '<span>'.$wed.' <a href="?page=manage-schedule&&wed_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1393,7 +1321,7 @@ function pts_options_page(){
 									$id  = $thu_schedules[$i]['id'];
 									$thu = $thu_schedules[$i]['schedule'];
 									if( isset($thu) && !empty($thu) ){
-										echo '<span>'.$thu.'<a href="?page=manage-schedule&&thu_id='.$id.'">x</a></span>';
+										echo '<span>'.$thu.' <a href="?page=manage-schedule&&thu_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1409,7 +1337,7 @@ function pts_options_page(){
 									$id  = $fri_schedules[$i]['id'];
 									$fri = $fri_schedules[$i]['schedule'];
 									if( isset($fri) && !empty($fri) ){
-										echo '<span>'.$fri.'<a href="?page=manage-schedule&&fri_id='.$id.'">x</a></span>';
+										echo '<span>'.$fri.' <a href="?page=manage-schedule&&fri_id='.$id.'">x</a></span>';
 									}else{
 										echo '<span>-</span>';
 									}
@@ -1435,11 +1363,11 @@ $options = get_option(basename(__FILE__, ".php"));
 
 	
 // Add settings link on plugin page
-function pts_settings_link($links) { 
-  $settings_link = '<a href="options-general.php?page='.plugin_basename(__FILE__).'">' . __('Settings','psm') .'</a>'; 
+function wpsp_scheduled_settings_link($links) { 
+  $settings_link = '<a href="options-general.php?page='.plugin_basename(__FILE__).'">' . __('Settings','wp-scheduled-posts') .'</a>'; 
   array_unshift($links, $settings_link); 
   return $links; 
 } 
 $plugin = plugin_basename(__FILE__); 
-add_filter("plugin_action_links_$plugin", 'pts_settings_link' );	
+add_filter("plugin_action_links_$plugin", 'wpsp_scheduled_settings_link' );	
 
