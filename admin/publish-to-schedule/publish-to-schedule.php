@@ -1,8 +1,5 @@
-
 <?php
-
 load_textdomain('psm', dirname(__FILE__).'/lang/' . get_locale() . '.mo');
-
 
 $plName = 'Publish to Schedule';
 $plUrl = 'https://wordpress.org/extend/plugins/publish-to-schedule/';
@@ -867,20 +864,20 @@ function pts_options_page(){
 		$options = get_option(basename(__FILE__, ".php"));
 		
 		// Fill up the options array as necessary					
-		$options['pts_start'] = $_POST['pts_start']; // like having business hours
-		$options['pts_end'] = $_POST['pts_end'];		
+		$options['pts_start'] = @$_POST['pts_start']; // like having business hours
+		$options['pts_end'] = @$_POST['pts_end'];		
 		
-		$options['pts_0'] = $_POST['pts_0'];
-		$options['pts_1'] = $_POST['pts_1'];
-		$options['pts_2'] = $_POST['pts_2'];
-		$options['pts_3'] = $_POST['pts_3'];
-		$options['pts_4'] = $_POST['pts_4'];
-		$options['pts_5'] = $_POST['pts_5'];
-		$options['pts_6'] = $_POST['pts_6'];
+		$options['pts_0'] = @$_POST['pts_0'];
+		$options['pts_1'] = @$_POST['pts_1'];
+		$options['pts_2'] = @$_POST['pts_2'];
+		$options['pts_3'] = @$_POST['pts_3'];
+		$options['pts_4'] = @$_POST['pts_4'];
+		$options['pts_5'] = @$_POST['pts_5'];
+		$options['pts_6'] = @$_POST['pts_6'];
 		
-		$options['pts_infosize'] = $_POST['pts_infosize'];
+		$options['pts_infosize'] = @$_POST['pts_infosize'];
 		
-		$options['pts_allowstats'] = $_POST['pts_allowstats'];
+		$options['pts_allowstats'] = @$_POST['pts_allowstats'];
 		
 		
 		# if all weeks are NO... change the monday to YES
@@ -1167,8 +1164,8 @@ function pts_options_page(){
 				if( isset($_POST['man_submit']) )
 				{
 
-					$man_days 	= $_POST['man_days'];
-					$man_times 	= $_POST['man_times'];
+					$man_days 	= @$_POST['man_days'];
+					$man_times 	= @$_POST['man_times'];
 
 					if(!empty($man_days) && !empty($man_times))
 		  			{
@@ -1250,31 +1247,31 @@ function pts_options_page(){
 						 		All delete query for every days
 						==========================================*/
 
-						$sat_id 		= $_GET['sat_id'];
+						$sat_id 		= @$_GET['sat_id'];
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$sat_id' ";
 						$delete_sat 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$sun_id 		= $_GET['sun_id'];
+						$sun_id 		= @$_GET['sun_id'];
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$sun_id' ";
 						$delete_sun 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$mon_id 		= $_GET['mon_id'];
+						$mon_id 		= @$_GET['mon_id'];
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$mon_id' ";
 						$delete_mon 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$tue_id 		= $_GET['tue_id'];
+						$tue_id 		= @$_GET['tue_id'];
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$tue_id' ";
 						$delete_tue 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$wed_id 		= $_GET['wed_id'];
+						$wed_id 		= @$_GET['wed_id'];
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$wed_id' ";
 						$delete_wed 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$thu_id 		= $_GET['thu_id'];
+						$thu_id 		= @$_GET['thu_id'];
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$thu_id' ";
 						$delete_thu 	= $wpdb->get_results($sql, ARRAY_A);
 
-						$fri_id 		= $_GET['fri_id'];
+						$fri_id 		= @$_GET['fri_id'];
 						$sql 			= "DELETE FROM ".$my_table." WHERE id='$fri_id' ";
 						$delete_fri 	= $wpdb->get_results($sql, ARRAY_A);
 

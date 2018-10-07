@@ -1,21 +1,17 @@
 <?php
 /*
-Plugin Name: wp scheduled posts - wp scheduled post pro
+Plugin Name: wp scheduled post pro
 Plugin URI: http://www.8pears.com
 Description: This Plugin shows your scheduled posts in calendar, manages your automatic posts publish time, catches missing posts and updates them .
 Author: Nazrul Islam Nayan
 Author URI: http://www.nazrulislamnayan.com
 Version: 1.0
-
-
 Copyright 2018 by 8pears solution limited
-
-*/ 
-
-
+*/?>
+<?php
 if (!class_exists('post_scheduler_monster')) {
 	class post_scheduler_monster {
-		function post_scheduler_monster() {
+		function __construct() {
 			$this->define_constant();
 			$this->load_dependencies();
 			$this->plugin_name = plugin_basename(__FILE__);
@@ -23,8 +19,8 @@ if (!class_exists('post_scheduler_monster')) {
 
 			
 			register_deactivation_hook( $this->plugin_name, array(&$this, 'deactivate') );
-			register_uninstall_hook( $this->plugin_name, array(&$this, 'uninstall') );
-			add_action( 'plugins_loaded', array(&$this, 'start_plugin') );
+			register_uninstall_hook( $this->plugin_name, 'uninstall' );
+			add_action( 'admin_enqueue_scripts', array(&$this, 'start_plugin') );
 			add_action( 'admin_init', array(&$this,'check_some_other_plugin' ) );
 		}
 		
@@ -62,9 +58,11 @@ if (!class_exists('post_scheduler_monster')) {
 		}
 
 		function deactivate(){
-
+return true;
 		}
-		function uninstall(){}
+		function uninstall(){
+			return true;
+		}
 		
 		function start_plugin() {
 			if ( is_admin() ) {
@@ -80,9 +78,11 @@ if (!class_exists('post_scheduler_monster')) {
 	global $psm;
 	$psm = new post_scheduler_monster();
 		
+
 include('admin/editorial-calendar/edcal.php');
 include('admin/publish-to-schedule/publish-to-schedule.php');
 include('admin/wp-missed-schedule-master/wp-missed-schedule.php');
+
 }
 
 ?>
