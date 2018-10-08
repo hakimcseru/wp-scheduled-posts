@@ -965,8 +965,11 @@ function wpsp_scheduled_options_page(){
 									type="text" 
 									id="<?php echo $day; ?>"
 									name="<?php echo "pts_$iday"; ?>" 
-									value="<?php if ($options["pts_$iday"] == 'no') echo '0'; else if ($options["pts_$iday"] == 'yes') echo '1'; else echo $options["pts_$iday"]; ?>" 
-									style="width: 40px;"/>
+									value="<?php
+										if ($options["pts_$iday"] == 'no') echo '0'; 
+										else if ($options["pts_$iday"] == 'yes') echo '1'; 
+										else echo $options["pts_$iday"]; 
+									?>" style="width: 40px;"/>
 							</td>
 							
 						</tr>
@@ -1149,46 +1152,46 @@ function wpsp_scheduled_options_page(){
 						==========================================*/
 
 						if(isset($_GET['sat_id'])){ 
-							$sat_id 		= $_GET['sat_id']; 
+							$sat_id 	= $_GET['sat_id']; 
+							$sql 			= "DELETE FROM ".$my_table." WHERE id='$sat_id' ";
+							$delete_sat 	= $wpdb->get_results($sql, ARRAY_A);
 						}
-						$sql 			= "DELETE FROM ".$my_table." WHERE id='$sat_id' ";
-						$delete_sat 	= $wpdb->get_results($sql, ARRAY_A);
 
 						if(isset($_GET['sun_id'])){
 							$sun_id 		= $_GET['sun_id'];
+							$sql 			= "DELETE FROM ".$my_table." WHERE id='$sun_id' ";
+							$delete_sun 	= $wpdb->get_results($sql, ARRAY_A);
 						}
-						$sql 			= "DELETE FROM ".$my_table." WHERE id='$sun_id' ";
-						$delete_sun 	= $wpdb->get_results($sql, ARRAY_A);
 
 						if(isset($_GET['mon_id'])){
 							$mon_id 		= $_GET['mon_id'];
+							$sql 			= "DELETE FROM ".$my_table." WHERE id='$mon_id' ";
+							$delete_mon 	= $wpdb->get_results($sql, ARRAY_A);
 						}
-						$sql 			= "DELETE FROM ".$my_table." WHERE id='$mon_id' ";
-						$delete_mon 	= $wpdb->get_results($sql, ARRAY_A);
 
 						if(isset($_GET['tue_id'])){
 							$tue_id 		= $_GET['tue_id'];
+							$sql 			= "DELETE FROM ".$my_table." WHERE id='$tue_id' ";
+							$delete_tue 	= $wpdb->get_results($sql, ARRAY_A);
 						}
-						$sql 			= "DELETE FROM ".$my_table." WHERE id='$tue_id' ";
-						$delete_tue 	= $wpdb->get_results($sql, ARRAY_A);
 
 						if(isset($_GET['wed_id'])){
 							$wed_id 		= $_GET['wed_id'];
+							$sql 			= "DELETE FROM ".$my_table." WHERE id='$wed_id' ";
+							$delete_wed 	= $wpdb->get_results($sql, ARRAY_A);
 						}
-						$sql 			= "DELETE FROM ".$my_table." WHERE id='$wed_id' ";
-						$delete_wed 	= $wpdb->get_results($sql, ARRAY_A);
 
 						if(isset($_GET['thu_id'])){
 							$thu_id 		= $_GET['thu_id'];
+							$sql 			= "DELETE FROM ".$my_table." WHERE id='$thu_id' ";
+							$delete_thu 	= $wpdb->get_results($sql, ARRAY_A);
 						}
-						$sql 			= "DELETE FROM ".$my_table." WHERE id='$thu_id' ";
-						$delete_thu 	= $wpdb->get_results($sql, ARRAY_A);
 
 						if(isset($_GET['fri_id'])){
 							$fri_id 		= $_GET['fri_id'];
+							$sql 			= "DELETE FROM ".$my_table." WHERE id='$fri_id' ";
+							$delete_fri 	= $wpdb->get_results($sql, ARRAY_A);
 						}
-						$sql 			= "DELETE FROM ".$my_table." WHERE id='$fri_id' ";
-						$delete_fri 	= $wpdb->get_results($sql, ARRAY_A);
 
 
 
