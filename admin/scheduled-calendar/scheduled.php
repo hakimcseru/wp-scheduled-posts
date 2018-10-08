@@ -420,7 +420,7 @@ class wpsp_scheduled {
         switch ($_GET['page']){
             
             case "f_vs_p" :
-                include_once ( ABSPATH . 'wp-content/plugins/wp-scheduled-posts-pro/admin/f_vs_p.php' );
+                include_once ( ABSPATH . 'wp-content/plugins/wp-scheduled-posts-free/admin/f_vs_p.php' );
                 break;
             
         }

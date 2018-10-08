@@ -10,7 +10,7 @@
 class optionAdminPanel{
 	var $user_level = 'manage_options';
 	
-	function optionAdminPanel() {
+	function __construct() {
 
 		add_action( 'admin_menu', array(&$this, 'add_menu') );
 		add_action( 'admin_head', array(&$this, 'add_jax') );
