@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: wp scheduled post pro
+Plugin Name: wp scheduled post free
 Plugin URI: https://wpdeveloper.net/free-plugin/wp-scheduled-posts/
 Description: This Plugin shows your scheduled posts in calendar, manages your automatic or custom posts publish time, catches missing posts and updates them .
 Author: WP Developer
@@ -79,7 +79,6 @@ if (!class_exists('wpsp_addon')) {
 	$wpsp_op = new wpsp_addon();
 		
 include('admin/scheduled-calendar/scheduled.php');
-include('admin/manage-schedule/manage-schedule.php');
 include('admin/wpsp-missed-schedule/wpsp-missed-schedule.php');
 }
 
