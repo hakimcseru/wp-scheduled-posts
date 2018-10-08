@@ -1133,25 +1133,27 @@ function wpsp_scheduled_options_page(){
 							<option value="thursday">thursday</option>
 							<option value="friday">friday</option>
 						</select>
-						<select name="man_times" id="man_times">
-							<option value="">Select Time</option>
+						<!-- <select name="man_times" id="man_times">
+							<option value="">Select Time</option> -->
 							<!-- Loop for custom manage time after 30min per option -->
 							<?php
-								$start = "00:00";
-								$end = "24:00";
+								// $start = "00:00";
+								// $end = "24:00";
 
-								$tStart = strtotime($start);
-								$tEnd = strtotime($end);
-								$tNow = $tStart;
+								// $tStart = strtotime($start);
+								// $tEnd = strtotime($end);
+								// $tNow = $tStart;
 
-								while($tNow <= $tEnd){
-								  $time_sch = date("H:i",$tNow)."\n";
-								  echo '<option value="'.$time_sch.'">'.$time_sch.'</option>';
-								  $tNow = strtotime('+30 minutes',$tNow);
-								}
+								// while($tNow <= $tEnd){
+								//   $time_sch = date("H:i",$tNow)."\n";
+								//   echo '<option value="'.$time_sch.'">'.$time_sch.'</option>';
+								//   $tNow = strtotime('+30 minutes',$tNow);
+								// }
 							?>
 
-						</select>
+						<!-- </select> -->
+						<input type="text" name="man_times" id="man_times" value="" placeholder="select time">
+
 						<input type="submit" name="man_submit" value="SET">
 					</div>
 					<?php 

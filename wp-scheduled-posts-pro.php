@@ -69,7 +69,9 @@ if (!class_exists('wpsp_addon')) {
 				wp_enqueue_style( 'custom-style', plugins_URLPATH . 'admin/css/custom-style.css' );
 				wp_enqueue_style( 'admin-style', plugins_URLPATH . 'admin/css/admin.css' );
 				wp_enqueue_style( 'font-awesome', plugins_URLPATH . 'admin/css/font-awesome.min.css' );
+				wp_enqueue_style( 'chung-timepicker', plugins_URLPATH . 'admin/css/chung-timepicker.css' );
 				wp_enqueue_script( 'custom-script', plugins_URLPATH . 'admin/js/custom-script.js', array('jquery'), '1.0.0', false );
+				wp_enqueue_script( 'main-chung-timepicker', plugins_URLPATH . 'admin/js/chung-timepicker.js', array('jquery'), '1.0.0', false );
 			}
 		}
 		
