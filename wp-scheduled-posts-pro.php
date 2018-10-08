@@ -21,11 +21,15 @@ if (!class_exists('wpsp_addon')) {
 
 			
 			register_deactivation_hook( $this->plugin_name, array(&$this, 'deactivate') );
-
+			register_activation_hook( $this->plugin_name, array(&$this, 'activate') );
 			register_uninstall_hook( $this->plugin_name, 'uninstall' );
 
+			
+
 			add_action( 'admin_enqueue_scripts', array(&$this, 'start_plugin') );
-			add_action( 'admin_init', array(&$this,'check_some_other_plugin' ) );
+			add_action( 'admin_init', array(&$this, 'check_some_other_plugin') );
+			add_action('admin_notices', array(&$this,'wpse120377_error') );
+
 		}
 		
 		function define_constant() {
@@ -43,19 +47,34 @@ if (!class_exists('wpsp_addon')) {
 		}
 
 		function check_some_other_plugin() {
-			if ( is_plugin_active('wp-scheduled-posts/wp-scheduled-posts.php') ) {
-				register_activation_hook( plugin_basename(__FILE__), 'activate' );
-				remove_submenu_page( 'options-general.php', 'wp-scheduled-posts' );
+			remove_submenu_page( 'options-general.php', 'wp-scheduled-posts' );
+		}
 
+		function activate() {
+			include_once (dirname (__FILE__) . '/admin/install.php');
+			psm_install();
+			return true;
+		}
+
+
+		function wpse120377_error()
+		{
+			if ( is_plugin_active('wp-scheduled-posts/wp-scheduled-posts.php') ) {
+					return false;
+
+			}else{
+	    ?>
+		    <div class="error">
+		        <p>
+		            <?php _e('"WP Scheduled Posts pro" requires "WP Scheduled Posts" Plugin. Please install it. ', 'wp-scheduled-posts'); ?>
+		            <a href="https://wordpress.org/plugins/wp-scheduled-posts/" target="_blank">WP Scheduled Posts</a>
+		        </p>
+		    </div>
+	    <?php
 			}
 		}
 
 		
-		function activate() {
-			
-			include_once (dirname (__FILE__) . '/admin/install.php');
-			psm_install();
-		}
 
 		function deactivate(){
 			return true;
