@@ -1,7 +1,8 @@
-<?php echo '<script src="http://localhost/wordpress/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>';
-	echo '<link rel="stylesheet" href="http://localhost/wordpress/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/dhtmlxscheduler_material.css" type="text/css" title="no title" charset="utf-8">';
+<?php 
+echo '<script src="http://wpnayan.local/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>';
+	echo '<link rel="stylesheet" href="http://wpnayan.local/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/dhtmlxscheduler_material.css" type="text/css" title="no title" charset="utf-8">';
 
-	echo '<script src="http://localhost/wordpress/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/ext/dhtmlxscheduler_minical.js" type="text/javascript" charset="utf-8"></script>';
+	echo '<script src="http://wpnayan.local/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/ext/dhtmlxscheduler_minical.js" type="text/javascript" charset="utf-8"></script>';
 ?>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>    
@@ -431,7 +432,9 @@ class wpsp_scheduled {
         if (isset($_GET['debug'])) {
             $this->edcal_echoFile(dirname( __FILE__ ) . "/edcal.js");
         } else {
-            $this->edcal_echoFile(dirname( __FILE__ ) . "/edcal.min.js");
+            //$this->edcal_echoFile(dirname( __FILE__ ) . "/edcal.min.js");// original
+            $this->edcal_echoFile(dirname( __FILE__ ) . "/edcal.js"); //hakim
+
         }
         echo '</script>';
         
@@ -441,29 +444,40 @@ class wpsp_scheduled {
         
             <div class="icon32" id="icon-edit"><br/></div>
             <h2 id="edcal_main_title"><?php echo sprintf( __('%1$s Calendar', 'editorial-calendar'), $this->edcal_get_posttype_multiplename() ) ?></h2>
-            
-           
- 
-            
-            <div id="draftsdrawer_cont" style="display:block">
-                  <script>
-                  function hihi(x,y){
-          //alert("sdfsd");
- var event = $.Event('click');
+
+<div id="draftsdrawer_cont" style="display:block; width:19%">
+<h2 class="dhx_cal_date" style="margin: 50px 1% 20px 1%; border-bottom:1px solid #EFEFEF !important;">Draft posts</h2>
+<script>
+    function hihi(x,y){
+    var event = $.Event('click');
         event.clientX = x;
         event.clientY = y;
         $('.dhx_cal_data').trigger(event);
       }
+
   $( function() {
-      
-    $( "#draggable" ).draggable();
+    $( ".draggable" ).draggable();
     $( ".dhx_cal_data" ).droppable({
       drop: function( event, ui ) {
+  //alert(ui.position.top);
+  /*var offset = $( '.draggable' ).offset();
+  event.stopPropagation();*/
+  /*alert( this.tagName +
+    " coords ( " + offset.left + ", " + offset.top + " )" );*/
+    /*var $newPosX = offset.left;
+    var $newPosY = offset.top;*/
+    var $newPosX = ui.offset.left+60;
+    var $newPosY = ui.offset.top-35;
+
 
        /*var $newPosX = ui.offset.left - $(this).offset().left;
         var $newPosY = ui.offset.top - $(this).offset().top;*/
-        /*var $newPosX = $(this).offset().left;
-        var $newPosY = $(this).offset().top;*/
+        //var $newPosX = $(this).offset().left;
+        //var $newPosY = $(this).offset().top;
+
+
+/*var position = $(this).position();
+alert( "left: " + position.left + ", top: " + position.top );*/
 
         /*$( this ).
           
@@ -474,21 +488,76 @@ class wpsp_scheduled {
            // var x=100;
            // var y=100;
            // $( "#scheduler_here").trigger("click", [x, y]);
-           alert($newPosX+" "+$newPosY);
+           //alert($newPosX+" "+$newPosY);
             hihi($newPosX,$newPosY);
       }
     });
   } );
   </script>
+<?php 
+ $args = array(
+	'post_status' => array( 'pending', 'draft', 'future' )
+);
+$query = new WP_Query( $args );
+// The Loop
+if ( $query->have_posts() ) {
+    /*
+    while ( $query->have_posts() ) {
+        $query->the_post();
+        global $post;
+            echo '<div onmouseover="edcal.showActionLinks(\'post-' . get_the_ID() . '\');" ' .
+            'onmouseout="edcal.hideActionLinks(\'post-' . get_the_ID() . '\');" ' .
+            'id="post-' . get_the_ID() . '"  class="ui-widget-content draggable postlist" style="z-index:100000;width:100px; height:25px; background-color:red;" >
+            <p>'.get_the_title().'</p>
+            </div>';
+            echo '<div class="postactions">' .
+            '<a href="'.get_edit_post_link().'">Edit</a> | ' .
+            '<a href="#" onclick="edcal.editPost('.get_the_ID().'); return false;">Quick Edit</a> | ' .
+            '<a href="'.get_delete_post_link().'" onclick="return edcal.confirmDelete(\''.get_the_title() . '\');">Delete</a> | ' .
+            '<a href="' .get_the_permalink() . '"' .
+            '>View</a>' .
+            '</div>';
+    }*/
 
- 
-<div id="draggable" class="ui-widget-content" style="z-index:100000;width:100px; height:25px; background-color:red;" >
+	//echo '<ul class="postlist" style="min-height:482px">';
+	while ( $query->have_posts() ) {
+        $query->the_post();
+        global $post;
+        echo '<li onmouseover="edcal.showActionLinks(\'post-' . get_the_ID() . '\');" ' .
+                 'onmouseout="edcal.hideActionLinks(\'post-' . get_the_ID() . '\');" ' .
+                 'id="post-' . get_the_ID() . '" class="post draggable ' . get_post_status()  . '" style="z-index:100000"><div class="postlink  classString " style="z-index:100000">' . 
+                     '<span style="z-index:10000; padding-left:10px;">' . get_the_title() . '</span>' .
+                   '</div>' .
+                 '<div class="postactions" style="padding-left:10px;">' .
+                 '<a href="'.get_edit_post_link().'">Edit</a> | ' .
+                 '<a href="#" onclick="edcal.editPost('.get_the_ID().'); return false;">Quick Edit</a> | ' .
+                 '<a href="'.get_delete_post_link().'" onclick="return edcal.confirmDelete(\''.get_the_title() . '\');">Delete</a> | ' .
+                 '<a href="' .get_the_permalink() . '"' .
+                   // ' onclick="edcal.getPost('+post.id+',function(r){ edcal.output(r) }); return false;"' + // for debugging
+                 '>View</a>' .
+                 '</div></li>';
+		//echo '<li class="draggable" style="z-index:100000;">' . get_the_title() . '</li>';
+	}
+	//echo '</ul>';*/
+	/* Restore original Post Data */
+	wp_reset_postdata();
+} else {
+	// no posts found
+}
+?>
+<!--
+<div class="ui-widget-content draggable" style="z-index:100000;width:100px; height:25px; background-color:red;" >
   <p>Drag me to my target</p>
+  
+</div>
+<div  class="ui-widget-content draggable" style="z-index:100000;width:100px; height:25px; background-color:red;" >
+  <p>Drag me to my target</p>
+  
 </div>
  
 <div id="droppable" class="ui-widget-header">
   <p>Drop here</p>
-</div>
+</div> -->
  
             </div>
             
