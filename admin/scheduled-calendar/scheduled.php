@@ -1,76 +1,3 @@
-<?php 
-echo '<script src="http://wpnayan.local/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/dhtmlxscheduler.js" type="text/javascript" charset="utf-8"></script>';
-	echo '<link rel="stylesheet" href="http://wpnayan.local/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/dhtmlxscheduler_material.css" type="text/css" title="no title" charset="utf-8">';
-
-	echo '<script src="http://wpnayan.local/wp-content/plugins/wp-scheduled-posts-free/admin/scheduled-calendar/codebase/ext/dhtmlxscheduler_minical.js" type="text/javascript" charset="utf-8"></script>';
-?>
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>    
-
-	<script type="text/javascript" charset="utf-8">
-
-		function init123() {
-			scheduler.config.multi_day = true;
-
-			scheduler.config.event_duration = 35;
-
-			scheduler.config.xml_date = "%Y-%m-%d %H:%i";
-			scheduler.init('scheduler_here', new Date(2018, 0, 10), "week");
-			//scheduler.load("../common/events.json", "json", function () {
-			//	scheduler.showLightbox(3);
-			//});
-            scheduler.attachEvent("onExternalDragIn", function(id, source, e) {
-				var label = tree.getItemText(tree._dragged[0].id);
-				scheduler.getEvent(id).text = label;
-				return true;
-			});
-
-            scheduler.attachEvent("onClick", function (id, e) {
-                    scheduler.showLightbox(id);
-                });
-
-                scheduler.attachEvent("onEmptyClick", function (date, e) {
-                    var eventId = scheduler.addEvent({
-                        start_date: date,
-                        end_date: date.addMinutes(15)
-                    });
-
-                    scheduler.showLightbox(eventId);
-                });
-
-
-			scheduler.config.lightbox.sections = [
-				{ name: "description", height: 50, map_to: "text", type: "textarea", focus: true },
-				{ name: "time", height: 72, type: "calendar_time", map_to: "auto" }
-			];
-
-		}
-
-    </script>
-    <?PHP /*
-    function edcal_list_admin()
-    {?>
-    
-       
-	<div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
-		<div class="dhx_cal_navline">
-			<div class="dhx_cal_prev_button">&nbsp;</div>
-			<div class="dhx_cal_next_button">&nbsp;</div>
-			<div class="dhx_cal_today_button"></div>
-			<div class="dhx_cal_date"></div>
-			<div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
-			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
-			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
-		</div>
-		<div class="dhx_cal_header">
-		</div>
-		<div class="dhx_cal_data">
-		</div>
-	</div>
-    <script>init123();</script>
-    <?php
-    }
-    */?>
 <?php
 if ( is_admin() ) {
     global $edcal;
@@ -432,162 +359,60 @@ class wpsp_scheduled {
         if (isset($_GET['debug'])) {
             $this->edcal_echoFile(dirname( __FILE__ ) . "/edcal.js");
         } else {
-            //$this->edcal_echoFile(dirname( __FILE__ ) . "/edcal.min.js");// original
-            $this->edcal_echoFile(dirname( __FILE__ ) . "/edcal.js"); //hakim
-
+            $this->edcal_echoFile(dirname( __FILE__ ) . "/edcal.min.js");
         }
         echo '</script>';
         
         ?>
         
         <div class="wrap">
-        
             <div class="icon32" id="icon-edit"><br/></div>
             <h2 id="edcal_main_title"><?php echo sprintf( __('%1$s Calendar', 'editorial-calendar'), $this->edcal_get_posttype_multiplename() ) ?></h2>
-
-<div id="draftsdrawer_cont" style="display:block; width:19%">
-<h2 class="dhx_cal_date" style="margin: 50px 1% 20px 1%; border-bottom:1px solid #EFEFEF !important;">Draft posts</h2>
-<script>
-    function hihi(x,y){
-    var event = $.Event('click');
-        event.clientX = x;
-        event.clientY = y;
-        $('.dhx_cal_data').trigger(event);
-      }
-
-  $( function() {
-    $( ".draggable" ).draggable();
-    $( ".dhx_cal_data" ).droppable({
-      drop: function( event, ui ) {
-  //alert(ui.position.top);
-  /*var offset = $( '.draggable' ).offset();
-  event.stopPropagation();*/
-  /*alert( this.tagName +
-    " coords ( " + offset.left + ", " + offset.top + " )" );*/
-    /*var $newPosX = offset.left;
-    var $newPosY = offset.top;*/
-    var $newPosX = ui.offset.left+60;
-    var $newPosY = ui.offset.top-35;
-
-
-       /*var $newPosX = ui.offset.left - $(this).offset().left;
-        var $newPosY = ui.offset.top - $(this).offset().top;*/
-        //var $newPosX = $(this).offset().left;
-        //var $newPosY = $(this).offset().top;
-
-
-/*var position = $(this).position();
-alert( "left: " + position.left + ", top: " + position.top );*/
-
-        /*$( this ).
-          
-          .find( "p" )
-            .html( "Dropped!" );*/
-                   
-           // var position = $(this).position();
-           // var x=100;
-           // var y=100;
-           // $( "#scheduler_here").trigger("click", [x, y]);
-           //alert($newPosX+" "+$newPosY);
-            hihi($newPosX,$newPosY);
-      }
-    });
-  } );
-  </script>
-<?php 
- $args = array(
-	'post_status' => array( 'pending', 'draft', 'future' )
-);
-$query = new WP_Query( $args );
-// The Loop
-if ( $query->have_posts() ) {
-    /*
-    while ( $query->have_posts() ) {
-        $query->the_post();
-        global $post;
-            echo '<div onmouseover="edcal.showActionLinks(\'post-' . get_the_ID() . '\');" ' .
-            'onmouseout="edcal.hideActionLinks(\'post-' . get_the_ID() . '\');" ' .
-            'id="post-' . get_the_ID() . '"  class="ui-widget-content draggable postlist" style="z-index:100000;width:100px; height:25px; background-color:red;" >
-            <p>'.get_the_title().'</p>
-            </div>';
-            echo '<div class="postactions">' .
-            '<a href="'.get_edit_post_link().'">Edit</a> | ' .
-            '<a href="#" onclick="edcal.editPost('.get_the_ID().'); return false;">Quick Edit</a> | ' .
-            '<a href="'.get_delete_post_link().'" onclick="return edcal.confirmDelete(\''.get_the_title() . '\');">Delete</a> | ' .
-            '<a href="' .get_the_permalink() . '"' .
-            '>View</a>' .
-            '</div>';
-    }*/
-
-	//echo '<ul class="postlist" style="min-height:482px">';
-	while ( $query->have_posts() ) {
-        $query->the_post();
-        global $post;
-        echo '<li onmouseover="edcal.showActionLinks(\'post-' . get_the_ID() . '\');" ' .
-                 'onmouseout="edcal.hideActionLinks(\'post-' . get_the_ID() . '\');" ' .
-                 'id="post-' . get_the_ID() . '" class="post draggable ' . get_post_status()  . '" style="z-index:100000"><div class="postlink  classString " style="z-index:100000">' . 
-                     '<span style="z-index:10000; padding-left:10px;">' . get_the_title() . '</span>' .
-                   '</div>' .
-                 '<div class="postactions" style="padding-left:10px;">' .
-                 '<a href="'.get_edit_post_link().'">Edit</a> | ' .
-                 '<a href="#" onclick="edcal.editPost('.get_the_ID().'); return false;">Quick Edit</a> | ' .
-                 '<a href="'.get_delete_post_link().'" onclick="return edcal.confirmDelete(\''.get_the_title() . '\');">Delete</a> | ' .
-                 '<a href="' .get_the_permalink() . '"' .
-                   // ' onclick="edcal.getPost('+post.id+',function(r){ edcal.output(r) }); return false;"' + // for debugging
-                 '>View</a>' .
-                 '</div></li>';
-		//echo '<li class="draggable" style="z-index:100000;">' . get_the_title() . '</li>';
-	}
-	//echo '</ul>';*/
-	/* Restore original Post Data */
-	wp_reset_postdata();
-} else {
-	// no posts found
-}
-?>
-<!--
-<div class="ui-widget-content draggable" style="z-index:100000;width:100px; height:25px; background-color:red;" >
-  <p>Drag me to my target</p>
-  
-</div>
-<div  class="ui-widget-content draggable" style="z-index:100000;width:100px; height:25px; background-color:red;" >
-  <p>Drag me to my target</p>
-  
-</div>
- 
-<div id="droppable" class="ui-widget-header">
-  <p>Drop here</p>
-</div> -->
- 
+            
+            <div id="loadingcont">
+                <div id="loading"> </div>
             </div>
             
-  <div id="cal_cont">
-                
-                   
-	<div id="scheduler_here" class="dhx_cal_container" style='width:80%; height:100%;'>
-		<div class="dhx_cal_navline">
-			<div class="dhx_cal_prev_button">&nbsp;</div>
-			<div class="dhx_cal_next_button">&nbsp;</div>
-			<div class="dhx_cal_today_button"></div>
-			<div class="dhx_cal_date"></div>
-			<div class="dhx_cal_tab" name="day_tab" style="right:204px;"></div>
-			<div class="dhx_cal_tab" name="week_tab" style="right:140px;"></div>
-			<div class="dhx_cal_tab" name="month_tab" style="right:76px;"></div>
-		</div>
-		<div class="dhx_cal_header">
-		</div>
-		<div class="dhx_cal_data">
-		</div>
-	</div>
-    <script>init123();</script>
+            <div id="topbar" class="tablenav clearfix">
+                <div id="topleft" class="tablenav-pages alignleft">
+                    <h3>
+                        <a href="#" title="<?php echo(__('Jump back', 'editorial-calendar')) ?>" class="prev page-numbers" id="prevmonth">&lsaquo;</a>
+                        <span id="currentRange"></span>
+                        <a href="#" title="<?php echo(__('Skip ahead', 'editorial-calendar')) ?>" class="next page-numbers" id="nextmonth">&rsaquo;</a>
+                        <a class="next page-numbers" title="<?php echo(__('Scroll the calendar and make the last post visible', 'editorial-calendar')) ?>" id="moveToLast">&raquo;</a>
 
+                        <a class="next page-numbers" title="<?php echo(__('Scroll the calendar and make the today visible', 'editorial-calendar')) ?>" id="moveToToday"><?php echo(__('Show Today', 'editorial-calendar')) ?></a>
+                        
+                        
+                    </h3>
+                </div>
 
+                <div id="topright" class="tablenav-pages alignright">
+                    <a class="next page-numbers" title="<?php echo(__('Show unscheduled posts', 'editorial-calendar')) ?>" id="showdraftsdrawer"><?php echo(__('Show Unscheduled Drafts', 'editorial-calendar')) ?></a>
+                </div>
+            </div>
+            
+            <div id="draftsdrawer_cont">
+                <div id="draftsdrawer">
+                    <div class="draftsdrawerheadcont" title="<?php echo(__('Unscheduled draft posts', 'editorial-calendar')) ?>"><div class="dayhead"><?php echo(__('Unscheduled', 'editorial-calendar')) ?></div></div>
+                    <div class="day" id="00000000">
+                        <div id="draftsdrawer_loading"></div>
+                        <div id="unscheduled" class="dayobj"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="cal_cont">
+                <div id="edcal_scrollable" class="edcal_scrollable vertical">
+                    <div id="cal"></div>
+                </div>
             </div>
 
-            <?php //$this->edcal_edit_popup(); ?>
+            <?php $this->edcal_edit_popup(); ?>
             
         </div><?php // end .wrap ?>
-   
+
+
         <?php
     }
 
