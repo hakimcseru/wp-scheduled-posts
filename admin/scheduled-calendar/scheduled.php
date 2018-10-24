@@ -317,8 +317,8 @@ class wpsp_scheduled {
                 edcal.str_weekserror = <?php echo($this->edcal_json_encode(__('The calendar can only show between 1 and 8 weeks at a time.', 'editorial-calendar'))) ?>;
                 edcal.str_weekstt = <?php echo($this->edcal_json_encode(__('Select the number of weeks for the calendar to show.', 'editorial-calendar'))) ?>;
 
-                edcal.str_showdrafts = <?php echo($this->edcal_json_encode(__('Show Unscheduled Drafts'))) ?>;
-                edcal.str_hidedrafts = <?php echo($this->edcal_json_encode(__('Hide Unscheduled Drafts'))) ?>;
+                edcal.str_showdrafts = <?php echo($this->edcal_json_encode(__('Unscheduled Drafts'))) ?>;
+                edcal.str_hidedrafts = <?php echo($this->edcal_json_encode(__('Hide Drafts'))) ?>;
     
                 edcal.str_feedbackmsg = <?php echo($this->edcal_json_encode(__('<div id="feedbacksection">' . 
                  '<h2>Help us Make the Editorial Calendar Better</h2>' .
@@ -388,13 +388,13 @@ class wpsp_scheduled {
                 </div>
 
                 <div id="topright" class="tablenav-pages alignright">
-                    <a class="next page-numbers" title="<?php echo(__('Show unscheduled posts', 'editorial-calendar')) ?>" id="showdraftsdrawer"><?php echo(__('Show Unscheduled Drafts', 'editorial-calendar')) ?></a>
+                    <a class="next page-numbers" title="<?php echo(__('Unscheduled posts', 'editorial-calendar')) ?>" id="showdraftsdrawer"><?php echo(__('Show Drafts', 'editorial-calendar')) ?></a>
                 </div>
             </div>
             
             <div id="draftsdrawer_cont">
                 <div id="draftsdrawer">
-                    <div class="draftsdrawerheadcont" title="<?php echo(__('Unscheduled draft posts', 'editorial-calendar')) ?>"><div class="dayhead"><?php echo(__('Unscheduled', 'editorial-calendar')) ?></div></div>
+                    <div class="draftsdrawerheadcont" title="<?php echo(__('Draft Posts', 'editorial-calendar')) ?>"><div class="dayhead"><?php echo(__('Unscheduled', 'editorial-calendar')) ?></div></div>
                     <div class="day" id="00000000">
                         <div id="draftsdrawer_loading"></div>
                         <div id="unscheduled" class="dayobj"></div>

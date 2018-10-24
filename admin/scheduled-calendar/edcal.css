@@ -625,3 +625,43 @@ div.metabox-prefs {
   background-color: rgba(0, 0, 0, .5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }
+/*hakim added here*/
+.tablenav .tablenav-pages a{
+    background-color: #00a0d2 !important;
+    color: #FFFFFF !important;
+    cursor: pointer;
+}
+.tablenav .tablenav-pages a:hover{
+    background-color: #00a0d2 !important;
+    color: #FFFFFF !important;
+    cursor: pointer;
+}
+#nextmonth, #prevmonth{
+    font-size: 16px !important;
+    cursor: pointer;
+}
+.dayheadcont, .draftsdrawerheadcont{
+    background-color: #FFFFFF !important;
+    background-image: none !important;
+    
+}
+.dayhead{
+   border-left: 1px solid #dfdfdf !important;
+}
+.dayhead:nth-child(1){
+   border-left: 0 !important;
+}
+#edcal_scrollable{
+    margin:0 !important;
+    width:100% !important;
+}
+.edcal_row>div{
+    width: 14.3% !important;
+}
+.dayobj{
+    width:100% !important;
+}
+.day{
+    width:29% !important;
+    margin:0 !important;
+}
